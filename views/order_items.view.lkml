@@ -120,6 +120,35 @@ view: order_items {
     value_format_name: usd
   }
 
+  dimension: completed_order {
+    type: yesno
+    sql: ${status} = 'Complete' ;;
+  }
+
+  dimension_group: duration_since_sign_up {
+    type: duration
+    intervals: [day, month, year]
+    sql_start: ${users.created_date} ;;
+    sql_end: ${created_date} ;;
+  }
+
+  measure: distinct_order_count {
+    type: count_distinct
+    sql: ${order_id} ;;
+  }
+
+  measure: distinct_complete_orders {
+    type: count_distinct
+    sql: ${order_id} ;;
+    filters: [completed_order: "Yes"]
+  }
+
+  measure: completed_order_ratio {
+    type: number
+    sql: ${distinct_complete_orders}/Nullif(${distinct_order_count},0) ;;
+    value_format_name: percent_2
+  }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

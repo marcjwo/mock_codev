@@ -12,6 +12,7 @@ persist_with: mock_codec_default_datagroup
 
 
 explore: order_items {
+  fields: [ALL_FIELDS*, -order_facts.order_id]
   view_label: "(1) Orders"
   join: users {
     view_label: "(2) User"
@@ -38,6 +39,13 @@ explore: order_items {
     view_label: "(5) Distribution Center"
     type: left_outer
     sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
+    relationship: many_to_one
+  }
+
+  join: order_facts {
+    view_label: "(6) Additional Order Facts"
+    type: left_outer
+    sql_on: ${order_items.order_id} = ${order_facts.order_id} ;;
     relationship: many_to_one
   }
 }
